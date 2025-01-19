@@ -4,8 +4,7 @@ const {
   loginController,
   updateProfile,
   updatePhoto,
-  getAllSavedSubmission,
-  getAllUser,
+  getUsers,
 } = require("../controllers/authController");
 const { requireSignin, isAdmin } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
@@ -25,11 +24,6 @@ router.put("/update-profile",requireSignin, updateProfile);
 // UPDATE PROFILE PHOTO
 router.put('/update-photo/',requireSignin, upload.single('photo'), updatePhoto);
 
-// GETIING ALL SAVED ELEMENTS
-router.get('/saved-submissions/',requireSignin, getAllSavedSubmission);
-
-
-router.get('/users' ,requireSignin,isAdmin, getAllUser);
-
+router.get('/users' ,requireSignin, getUsers);
 
 module.exports = router;

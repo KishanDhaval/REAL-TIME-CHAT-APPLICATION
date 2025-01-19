@@ -6,20 +6,20 @@ const createToken = (_id) => {
 };
 
 const registerController = async (req, res) => {
-  const { name, email, password  } = req.body;
+  const { name, email, password } = req.body;
   const picPath = req.file ? req.file.path : null;
 
-  try {    
+  try {
     // Create a new user
-    const user = await User.register(name, email, password , picPath);
-    
+    const user = await User.register(name, email, password, picPath);
+
     // Generate a token for the new user
     const token = createToken(user._id);
 
     // Select the user excluding the password field and populate necessary fields
-    const userWithoutPassword = await User.findById(user._id)
-      .select("-password")
-
+    const userWithoutPassword = await User.findById(user._id).select(
+      "-password"
+    );
 
     // Send response with user info and token
     res.status(200).json({
@@ -47,8 +47,9 @@ const loginController = async (req, res) => {
     const token = createToken(user._id);
 
     // Select the user excluding the password field and add the token
-    const userWithoutPassword = await User.findById(user._id)
-      .select("-password")
+    const userWithoutPassword = await User.findById(user._id).select(
+      "-password"
+    );
 
     res.status(200).json({
       success: true,
@@ -108,7 +109,7 @@ const updateProfile = async (req, res) => {
 
 const updatePhoto = async (req, res) => {
   try {
-    const userId = req.user._id;    
+    const userId = req.user._id;
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -152,42 +153,20 @@ const updatePhoto = async (req, res) => {
   }
 };
 
-const getAllSavedSubmission = async (req, res) => {
+const getUsers = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const keyword = req.query.search
+      ? {
+          $or: [
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } },
+          ],
+        }
+      : {};
 
-    const user = await User.findById(userId)
-      .select("-password")
-      .populate("savedSubmissions");
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      savedSubmissions: user.savedSubmissions,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to retrieve saved submissions",
-      error: error.message,
-    });
-  }
-};
-
-const getAllUser = async (req, res) => {
-  try {
-    const users = await User.find()
-      .select("-password")
-      .populate("challengeSubmissions")
-      .populate("componentSubmissions")
-      .populate("winning")
-      .populate("savedSubmissions");
+    const users = await User.find(keyword)
+      .find({ _id: { $ne: req.user._id } })
+      .select("-password");
 
     if (!users) {
       return res.status(404).json({
@@ -203,7 +182,6 @@ const getAllUser = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    
     res.status(500).json({
       success: false,
       message: "Failed to retrieve saved submissions",
@@ -217,6 +195,5 @@ module.exports = {
   loginController,
   updateProfile,
   updatePhoto,
-  getAllSavedSubmission,
-  getAllUser,
+  getUsers,
 };
