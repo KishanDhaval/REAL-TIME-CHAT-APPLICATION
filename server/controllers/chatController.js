@@ -91,7 +91,7 @@ const getChats = async (req, res) => {
 
 const createGroupChat = async (req, res) => {
   try {
-    const { users, name } = req.body;
+    const {  name , users } = req.body;
 
     if (!users || !name)
       res.status(400).json({

@@ -1,21 +1,32 @@
-import { createContext, useEffect, useState } from "react";
-import { useAuthContext } from "../hooks/useAuthContext";
-// import { useHistory } from "react-router-dom";
+import { createContext, useContext, useState, useEffect } from "react";
+import axiosInstance from "../utils/axiosConfig"; // Adjust path based on your structure
+
 const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
-  const { user } = useAuthContext;
+  const [chats, setChats] = useState([]);
+  const [loadingChats, setLoadingChats] = useState(true); // Optional loading state
+  const [ selectedChat , setSelectedChat] = useState(null)
 
-//   const history = useHistory();
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const { data } = await axiosInstance.get("/api/chat"); // Fetch chats
+        setChats(data.chats || []); // Update state with chats
+        localStorage.setItem("userChats", JSON.stringify(data.chats)); // Save to local storage
+      } catch (error) {
+        console.error("Error fetching chats:", error);
+      }
+      finally{
+        setLoadingChats(false)
+      }
+    };
 
-//   useEffect(()=>{
-//     if(!user){
-//         history.push('/')
-//     }
-//   },[])
+    fetchChats();
+  }, []);
 
   return (
-    <ChatContext.Provider value={{user}}>
+    <ChatContext.Provider value={{ chats, setChats, loadingChats,setLoadingChats ,selectedChat, setSelectedChat }}>
       {children}
     </ChatContext.Provider>
   );
