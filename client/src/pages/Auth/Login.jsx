@@ -65,7 +65,7 @@ const Login = () => {
             Still not registered?{" "}
             <Link
               className=" font-bold hover:border-b-2 border-zinc-700"
-              to="/register"
+              to="/"
             >
               Sign up
             </Link>

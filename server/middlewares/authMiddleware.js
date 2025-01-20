@@ -8,7 +8,7 @@ const requireSignin = async (req, res, next) => {
         return res.status(401).json({ error: "Authentication token required" });
     }
 
-    const token = authorization.split(" ")[0];
+    const token = authorization.split(" ")[1];
   
     try {
         const { _id } = jwt.verify(token, process.env.JWT_SECRET);

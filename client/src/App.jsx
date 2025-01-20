@@ -5,7 +5,8 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import { Toaster } from "react-hot-toast";
-import Home from "./pages/Home";
+import PrivateRoute from "./components/Auth/PrivateRoute";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   const { user, isLoading } = useAuthContext();
@@ -17,15 +18,22 @@ function App() {
     <>
       <Toaster />
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route
+          path="/chats"
+          element={
+            <PrivateRoute>
+              <ChatPage />
+            </PrivateRoute>
+          }
+        />
         {/* Login and register */}
         <Route
-          path="/register"
-          element={!user ? <Register /> : <Navigate to="/" />}
+          path="/"
+          element={!user ? <Register /> : <Navigate to="/chats" />}
         />
         <Route
           path="/login"
-          element={!user ? <Login /> : <Navigate to="/" />}
+          element={!user ? <Login /> : <Navigate to="/chats" />}
         />
       </Routes>
     </>

@@ -7,7 +7,7 @@ const createToken = (_id) => {
 
 const registerController = async (req, res) => {
   const { name, email, password } = req.body;
-  const picPath = req.file ? req.file.path : null;
+  const picPath = req.file ? req.file.filename : null;
 
   try {
     // Create a new user
@@ -174,7 +174,7 @@ const getUsers = async (req, res) => {
         message: "User not Found",
       });
     }
-
+    
     res.status(200).json({
       success: true,
       message: "Success",

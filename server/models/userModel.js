@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema(
       },
       pic: {
           type: String,
-          default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+          default: "default.jpg",
       },
   },
   { timestamps: true }
@@ -46,9 +46,13 @@ userSchema.statics.register = async function (name, email, password , picPath) {
     name,
     email,
     password: hash,
-    pic:picPath
   });
-
+  
+  if (picPath != null) {
+    user.pic = picPath; // Assign the picture path to the user's 'pic' field
+    await user.save();  // Save the updated user instance to the database
+  }
+  
   return user;
 };
 
