@@ -5,6 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 const authRoutes = require('./routes/authRoute');
 const chatRoutes = require('./routes/chatRoute');
+const massageRoutes = require('./routes/massageRoute');
 
 // Middleware
 app.use(cors());
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/message", massageRoutes);
 
 const port = process.env.PORT ||3000;
 app.listen(port, () => {
