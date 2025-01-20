@@ -15,7 +15,7 @@ const CreateGroupModel = ({ toggleCreateGroupModal }) => {
   const [selectedUsers, setSelectedUser] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = async (query) => {
     const trimmedQuery = query.trim(); // Trim the input
@@ -31,7 +31,6 @@ const CreateGroupModel = ({ toggleCreateGroupModal }) => {
       const { data } = await axiosInstance.get(
         `/api/auth/users?search=${trimmedQuery}`
       );
-      console.log(data);
       setSearchResults(data.users);
     } catch (error) {
       console.log(error);

@@ -96,7 +96,7 @@ const Navbar = () => {
 
       {/* Profile Modal */}
       {profileModalOpen && (
-        <ProfileModel toggleProfileModal={toggleProfileModal}/>
+        <ProfileModel toggleProfileModal={toggleProfileModal} user={user}/>
       )}
 
       {/* Left Drawer */}

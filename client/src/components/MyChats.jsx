@@ -21,7 +21,7 @@ const MyChats = ({fetchAgain}) => {
       className={`p-4 border border-gray-300 bg-zinc-100`}
     >
       <div className="header w-full flex justify-between items-center">
-        <h2 className="text-lg font-bold">My Chats</h2>
+        <h2 className="text-lg font-bold mb-4">My Chats</h2>
         <button
           type="button"
           onClick={toggleCreateGroupModal}
@@ -35,9 +35,9 @@ const MyChats = ({fetchAgain}) => {
           {chats.map((chat, index) => (
             <li
               key={index}
-              className={`pb-3 pt-3 sm:pb-4 cursor-pointer text-zinc-800 hover:bg-gray-300 ${
+              className={`pb-3 pt-3 sm:pb-4 px-2 cursor-pointer text-zinc-800 hover:bg-zinc-300 ${
                 selectedChat && selectedChat._id === chat._id
-                  ? "bg-gray-300"
+                  ? "bg-zinc-300"
                   : ""
               }`}
               onClick={() => setSelectedChat(chat)}

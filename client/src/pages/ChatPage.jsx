@@ -14,14 +14,14 @@ const ChatPage = () => {
 
   return (
     <Layout >
-      <div className="container min-w-full flex gap-4 justify-between p-4 min-h-[calc(100vh-4rem)] bg-zinc-200">
+      <div className="container min-w-full flex gap-4 justify-between p-4 h-[calc(100vh-4rem)] bg-zinc-200">
         {/* MyChats section - visible if there's no selected chat */}
         <div className={` md:w-2/6 w-full ${selectedChat ? "hidden md:block" : "block"}`}>
           {user && <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
         </div>
 
         {/* ChatBox section - visible if there's a selected chat */}
-        <div className={`w-full md:w-4/6 ${selectedChat ? "block" : "hidden md:block"}`}>
+        <div className={`w-full h-full md:w-4/6 ${selectedChat ? "block" : "hidden md:block"}`}>
           {user && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>}
         </div>
       </div>

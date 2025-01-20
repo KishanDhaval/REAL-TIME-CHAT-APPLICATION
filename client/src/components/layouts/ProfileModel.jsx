@@ -1,10 +1,9 @@
 import React from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { IoClose } from "react-icons/io5";
-const ProfileModel = ({ toggleProfileModal }) => {
+const ProfileModel = ({ toggleProfileModal , user}) => {
   const basePicUrl = "http://localhost:3000/images";
 
-  const { user } = useAuthContext();
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"

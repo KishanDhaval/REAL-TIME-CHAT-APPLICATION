@@ -6,7 +6,7 @@ const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true); // Optional loading state
-  const [ selectedChat , setSelectedChat] = useState(null)
+  const [ selectedChat , setSelectedChat] = useState("")
 
   useEffect(() => {
     const fetchChats = async () => {
