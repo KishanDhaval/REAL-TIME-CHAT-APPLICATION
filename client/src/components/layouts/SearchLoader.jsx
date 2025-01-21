@@ -4,7 +4,7 @@ const SearchLoader = () => {
   return (
     <div
       role="status"
-      className="space-y-4 animate-pulse max-w-md mx-auto p-4"
+      className="space-y-4 animate-pulse w-full mx-auto p-4"
     >
       {/* Single loader item */}
       {[...Array(5)].map((_, index) => (

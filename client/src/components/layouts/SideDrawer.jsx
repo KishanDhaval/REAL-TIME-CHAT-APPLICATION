@@ -49,7 +49,7 @@ const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 w-1/4 h-full bg-zinc-800 text-white shadow-lg transform transition-transform ${
+      className={`fixed top-0 left-0 z-50 w-1/4 h-full bg-zinc-100 text-zinc-800 shadow-lg transform transition-transform ${
         drawerOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
@@ -57,7 +57,7 @@ const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
         <h3 className="text-lg font-semibold">Search User</h3>
         <button
           onClick={toggleDrawer}
-          className="text-gray-400 hover:text-gray-200"
+          className="text-zinc-400 hover:text-zinc-300 ease transition"
         >
           <RxCross2 className="text-xl" />
         </button>
@@ -65,20 +65,20 @@ const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
       <div className="p-4 max-w-md mx-auto">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <IoSearch className="inline" />
+            <IoSearch className="inline text-sky-500 text-lg" />
           </div>
           <input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             id="default-search"
-            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full p-4 pl-10 text-sm text-gray-900 outline-none border  rounded-lg bg-gray-50   border-gray-300 placeholder-gray-400   "
             placeholder="Search users..."
             required
           />
           <button
             onClick={handleSearch}
-            className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white absolute right-2.5 bottom-2.5 bg-zinc-800 hover:bg-zinc-700 transition ease outline-none rounded-lg text-sm px-4 py-2 "
           >
             Go
           </button>
@@ -87,11 +87,11 @@ const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
         {searchLoading ? (
           <SearchLoader /> // Loader component for search results
         ) : searchResults.length > 0 ? (
-          <ul className="max-w-md divide-y mt-2 divide-gray-200 dark:divide-gray-700">
+          <ul className="w-full divide-y mt-2 divide-zinc-300 ">
             {searchResults.map((user, index) => (
               <li
                 key={index}
-                className="pb-3 pt-3 sm:pb-4 cursor-pointer hover:bg-gray-700"
+                className="pb-3 px-2 pt-3 sm:pb-4 cursor-pointer hover:bg-sky-100"
                 onClick={(e) => handleUserClick(e ,user._id)}
               >
                 <div className="flex items-center space-x-4 rtl:space-x-reverse">
@@ -106,10 +106,10 @@ const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <p className="text-sm font-medium text-zinc-700 ">
                       {user.name}
                     </p>
-                    <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                    <p className="text-sm truncate text-zinc-400">
                       {user.email}
                     </p>
                   </div>

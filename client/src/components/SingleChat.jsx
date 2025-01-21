@@ -28,7 +28,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
 
   const { user } = useAuthContext();
-  const { selectedChat, setSelectedChat ,notification , setNotification ,setChats, chats} = ChatState();
+  const {
+    selectedChat,
+    setSelectedChat,
+    notification,
+    setNotification,
+    setChats,
+    chats,
+  } = ChatState();
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [groupEditModelOpen, setgroupEditModelOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -50,14 +57,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.on("typing", () => setIsTyping(true));
       socket.on("stop typing", () => setIsTyping(false));
     }
-  
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+
+    // return () => {
+    //   if (socket) {
+    //     socket.disconnect();
+    //   }
+    // };
   }, [user]);
-  
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -85,20 +91,20 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
-  console.log(notification);
-
   useEffect(() => {
     if (!socket) return;
-  
+
     socket.on("message received", (newMessageReceived) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
         // Add the new message to the notification list if not already included
-        if (!notification.find((notif) => notif._id === newMessageReceived._id)) {
+        if (
+          !notification.find((notif) => notif._id === newMessageReceived._id)
+        ) {
           setNotification([newMessageReceived, ...notification]);
-  
+
           // Update chats by modifying the last message of the relevant chat
           setChats((prevChats) =>
             prevChats.map((chat) =>
@@ -113,12 +119,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
     });
-  
+
     return () => {
       socket.off("message received");
     };
-  });
-  
+  }, [socket, messages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -211,7 +216,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </div>
 
           {/* Chat Box */}
-          <div className="chatBox bg-zinc-300 w-full flex flex-col justify-end flex-grow p-4 overflow-y-auto">
+          <div className="chatBox bg-sky-00 border rounded-t w-full flex flex-col justify-end flex-grow p-4 overflow-y-auto">
             {loading ? (
               <div className="h-12 w-12 self-center mb-64">
                 <Spinner />
@@ -243,14 +248,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
                       {/* Message Content */}
                       <div
+                        className={`${
+                          m.sender._id === user._id
+                            ? "bg-[#364F6B] text-white"
+                            : "bg-[#DDE6ED] text-[#27374D]"
+                        } rounded-[20px] p-[5px_15px] max-w-[75%]`}
                         style={{
-                          backgroundColor:
-                            m.sender._id === user._id ? "#18181B" : "white",
-                          color:
-                            m.sender._id === user._id ? "white" : "#18181B",
-                          borderRadius: "20px",
-                          padding: "5px 15px",
-                          maxWidth: "75%",
                           marginLeft: m.sender._id === user._id ? "auto" : "0",
                           marginRight: m.sender._id !== user._id ? "auto" : "0",
                           marginTop: isSameUser(messages, m, i) ? 3 : 10,
@@ -266,9 +269,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
           {/* Input Box */}
           <div className="">
-          <TypingIndicator  isTyping={isTyping} />
+            <TypingIndicator isTyping={isTyping} />
             {/* {isTyping ? <TypingIndicator/> : <></>} */}
-            <form className="inputBox flex items-center w-full bg-zinc-300 p-3 border-t">
+            <form className="inputBox flex items-center w-full bg-sky-00 p-3 border-r rounded-b border-l border-b">
               <input
                 type="text"
                 value={newMessage}
