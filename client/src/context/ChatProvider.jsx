@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../utils/axiosConfig"; // Adjust path based on your structure
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const ChatContext = createContext();
 
@@ -7,7 +8,7 @@ const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true); // Optional loading state
   const [ selectedChat , setSelectedChat] = useState("")
-
+  const {user} = useAuthContext()
   useEffect(() => {
     const fetchChats = async () => {
       try {
@@ -23,7 +24,7 @@ const ChatProvider = ({ children }) => {
     };
 
     fetchChats();
-  }, []);
+  }, [user]);
 
   return (
     <ChatContext.Provider value={{ chats, setChats, loadingChats,setLoadingChats ,selectedChat, setSelectedChat }}>

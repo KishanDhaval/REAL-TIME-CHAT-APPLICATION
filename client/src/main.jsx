@@ -7,13 +7,13 @@ import { BrowserRouter } from "react-router-dom";
 import ChatProvider from "./context/ChatProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <ChatProvider>
     <BrowserRouter>
       <AuthContextProvider>
+  <ChatProvider>
         <StrictMode>
           <App />
         </StrictMode>
-      </AuthContextProvider>
-    </BrowserRouter>
   </ChatProvider>
+      </AuthContextProvider>
+    </BrowserRouter>,
 );

@@ -94,8 +94,9 @@ const UpdateGroupChatModel = ({
       });
   
       if (userToRemove._id === user._id) {
-        // If the admin removes themselves, clear the selected chat
-        setSelectedChat(null);
+        // If the user removes themselves or leaves the group
+        setChats((prevChats) => prevChats.filter((chat) => chat._id !== selectedChat._id));
+        setSelectedChat(null); // Clear the selected chat
         toggleGroupEditModal();
         toast.success("You have left the group.");
       } else {
@@ -114,6 +115,7 @@ const UpdateGroupChatModel = ({
       setLoading(false);
     }
   };
+  
   
 
   const handleRename = async (e) => {
