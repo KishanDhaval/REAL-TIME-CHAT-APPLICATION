@@ -9,7 +9,7 @@ import SearchLoader from "./layouts/SearchLoader";
 const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
 
 const MyChats = ({fetchAgain}) => {
-  const { chats, loadingChats, selectedChat, setSelectedChat } = ChatState();
+  const { chats, loadingChats, selectedChat, setSelectedChat ,notification, setNotification } = ChatState();
   const { user } = useAuthContext();
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
   
@@ -18,7 +18,7 @@ const MyChats = ({fetchAgain}) => {
 
   return (
     <div
-      className={`p-4 border border-gray-300 bg-zinc-100`}
+      className={`p-4 border h-full border-gray-300 bg-zinc-100`}
     >
       <div className="header w-full flex justify-between items-center">
         <h2 className="text-lg font-bold mb-4">My Chats</h2>
@@ -40,7 +40,10 @@ const MyChats = ({fetchAgain}) => {
                   ? "bg-zinc-300"
                   : ""
               }`}
-              onClick={() => setSelectedChat(chat)}
+              onClick={() =>{
+                setSelectedChat(chat);
+                setNotification(notification.filter((n)=> n.chat._id !== chat._id))
+              } }
             >
               <div className="flex items-center space-x-4 rtl:space-x-reverse">
                 <div className="flex-shrink-0">

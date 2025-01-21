@@ -6,6 +6,8 @@ import { useLogout } from "../../hooks/useLogout";
 import Logo from "./Logo";
 import SideDrawer from "./SideDrawer";
 import ProfileModel from "./ProfileModel";
+import { ChatState } from "../../context/ChatProvider";
+import { getSenders } from "../../utils/chatLogics";
 
 const Navbar = () => {
   const { user } = useAuthContext();
@@ -13,32 +15,24 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const basePicUrl = "http://localhost:3000/images";
+
+  const { notification, setNotification,setSelectedChat } = ChatState();
+
+  console.log(notification);
+  
 
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleProfileModal = () => setProfileModalOpen(!profileModalOpen);
+  const toggleNotification = () => setNotificationOpen(!notificationOpen);
 
   const handleLogout = () => logout();
 
-  const handleOutsideClick = (e) => {
-    if (!e.target.closest(".dropdown")) {
-      setDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    if (dropdownOpen) {
-      document.addEventListener("click", handleOutsideClick);
-    } else {
-      document.removeEventListener("click", handleOutsideClick);
-    }
-    return () => document.removeEventListener("click", handleOutsideClick);
-  }, [dropdownOpen]);
-
   return (
     <>
-      <nav className="h-16 text-white border-b border-gray-800 bg-zinc-900 flex items-center justify-between px-2">
+      <nav className="h-16 text-white border-b w-full border-gray-800 bg-zinc-900 flex items-center justify-between px-2">
         {/* Search Section */}
         <div className="search">
           <button
@@ -54,8 +48,41 @@ const Navbar = () => {
         <Logo />
 
         {/* Right Section */}
-        <div className="hidden md:flex items-center relative">
-          <IoIosNotifications className="text-xl me-4" />
+        <div className="flex items-center relative">
+          {/* Notifications */}
+          <div className="relative">
+            <button onClick={toggleNotification} className="relative">
+              <IoIosNotifications className="text-xl" />
+              {notification.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-3 h-3 text-xs font-bold text-white bg-red-500 rounded-full">
+                  {notification.length}
+                </span>
+              )}
+            </button>
+            {notificationOpen && (
+              <div className="absolute right-0 mt-2 py-2 bg-zinc-700 divide-y  divide-gray-100 rounded-lg shadow w-72 z-10">
+                {notification.length ? (
+                  notification.map((note, idx) => (
+                    <div
+                      key={idx}
+                      onClick={()=>{
+                        setSelectedChat(note.chat)
+                        setNotification(notification.filter((n)=> n !== note))
+                        setNotificationOpen(!notificationOpen)
+                      }}
+                      className="flex items-center p-2 cursor-pointer hover:bg-zinc-600"
+                    >
+                      {note.chat.isGroupChat
+                        ? `New Message in ${note.chat.chatName}`
+                        : `New Message from ${getSenders(user , note.chat.users)}`}
+                    </div>
+                  ))
+                ) : (
+                  <p className="p-2 text-sm text-gray-400">No notifications</p>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Profile Dropdown */}
           <div className="relative dropdown">
@@ -78,13 +105,13 @@ const Navbar = () => {
               <div className="absolute right-0 mt-2 py-2 bg-zinc-700 divide-y divide-gray-100 rounded-lg shadow w-44 z-10">
                 <button
                   onClick={toggleProfileModal}
-                  className="block px-4 py-2  text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
                 >
                   Profile
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="block px-4 py-2  text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
+                  className="block px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
                 >
                   Sign out
                 </button>
@@ -96,7 +123,7 @@ const Navbar = () => {
 
       {/* Profile Modal */}
       {profileModalOpen && (
-        <ProfileModel toggleProfileModal={toggleProfileModal} user={user}/>
+        <ProfileModel toggleProfileModal={toggleProfileModal} user={user} />
       )}
 
       {/* Left Drawer */}

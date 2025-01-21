@@ -18,20 +18,46 @@ import axiosInstance from "../utils/axiosConfig";
 import toast from "react-hot-toast";
 import ScrollableFeed from "react-scrollable-feed"; // Importing the ScrollableFeed component
 import { isSameSender } from "../utils/chatLogics";
+import { io } from "socket.io-client";
+import TypingIndicator from "./layouts/TypingIndicator";
+
+const ENDPOINT = "http://localhost:3000";
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
 
   const { user } = useAuthContext();
-  const { selectedChat, setSelectedChat } = ChatState();
+  const { selectedChat, setSelectedChat ,notification , setNotification ,setChats, chats} = ChatState();
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [groupEditModelOpen, setgroupEditModelOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
 
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
   const toggleProfileModal = () => setProfileModalOpen(!profileModalOpen);
   const toggleGroupEditModal = () => setgroupEditModelOpen(!groupEditModelOpen);
+
+  useEffect(() => {
+    if (!socket) {
+      socket = io(ENDPOINT);
+      socket.emit("setup", user);
+      socket.on("connected", () => setSocketConnected(true));
+      socket.on("typing", () => setIsTyping(true));
+      socket.on("stop typing", () => setIsTyping(false));
+    }
+  
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, [user]);
+  
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -41,9 +67,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       const { data } = await axiosInstance.get(
         `/api/message/${selectedChat._id}`
       );
-      console.log(data);
 
       setMessages(data); // Update the messages state
+
+      socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error("Error fetching messages:", error);
       toast.error("Something went wrong.");
@@ -54,7 +81,44 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages(); // Call the fetch function whenever the selected chat changes
+
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  console.log(notification);
+
+  useEffect(() => {
+    if (!socket) return;
+  
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chat._id
+      ) {
+        // Add the new message to the notification list if not already included
+        if (!notification.find((notif) => notif._id === newMessageReceived._id)) {
+          setNotification([newMessageReceived, ...notification]);
+  
+          // Update chats by modifying the last message of the relevant chat
+          setChats((prevChats) =>
+            prevChats.map((chat) =>
+              chat._id === newMessageReceived.chat._id
+                ? { ...chat, lastMessage: newMessageReceived.content }
+                : chat
+            )
+          );
+        }
+      } else {
+        // Add the message to the selected chat's message list
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
+      }
+    });
+  
+    return () => {
+      socket.off("message received");
+    };
+  });
+  
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -71,6 +135,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setNewMessage("");
 
       try {
+        socket.emit("stop typing", selectedChat._id);
         const { data } = await axiosInstance.post(`/api/message/`, {
           content: newMessage,
           chatId: selectedChat._id,
@@ -80,6 +145,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setMessages((prevMessages) =>
           prevMessages.map((msg) => (msg._id === tempMessage._id ? data : msg))
         );
+        socket.emit("new message", data);
       } catch (error) {
         // Remove the temporary message if sending fails
         setMessages((prevMessages) =>
@@ -93,6 +159,27 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
+    // typing indicator logic
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -159,7 +246,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         style={{
                           backgroundColor:
                             m.sender._id === user._id ? "#18181B" : "white",
-                          color: m.sender._id === user._id ? "white" : "#18181B",
+                          color:
+                            m.sender._id === user._id ? "white" : "#18181B",
                           borderRadius: "20px",
                           padding: "5px 15px",
                           maxWidth: "75%",
@@ -177,21 +265,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </div>
 
           {/* Input Box */}
-          <form className="inputBox flex items-center w-full bg-zinc-300 p-3 border-t">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={typingHandler}
-              placeholder="Type a message..."
-              className="flex-grow p-2 border rounded-lg focus:outline-none"
-            />
-            <button
-              onClick={handleSendMessage}
-              className="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-            >
-              Send
-            </button>
-          </form>
+          <div className="">
+          <TypingIndicator  isTyping={isTyping} />
+            {/* {isTyping ? <TypingIndicator/> : <></>} */}
+            <form className="inputBox flex items-center w-full bg-zinc-300 p-3 border-t">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={typingHandler}
+                placeholder="Type a message..."
+                className="flex-grow p-2 border rounded-lg focus:outline-none"
+              />
+              <button
+                onClick={handleSendMessage}
+                className="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                Send
+              </button>
+            </form>
+          </div>
         </div>
       ) : (
         <div className="text-center mt-80 text-3xl text-zinc-400">

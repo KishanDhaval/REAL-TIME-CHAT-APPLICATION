@@ -7,27 +7,40 @@ const ChatContext = createContext();
 const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true); // Optional loading state
-  const [ selectedChat , setSelectedChat] = useState("")
-  const {user} = useAuthContext()
-  useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const { data } = await axiosInstance.get("/api/chat"); // Fetch chats
-        setChats(data.chats || []); // Update state with chats
-        localStorage.setItem("userChats", JSON.stringify(data.chats)); // Save to local storage
-      } catch (error) {
-        console.error("Error fetching chats:", error);
-      }
-      finally{
-        setLoadingChats(false)
-      }
-    };
+  const [selectedChat, setSelectedChat] = useState("");
+  const [notification, setNotification] = useState([]);
 
+  const { user } = useAuthContext();
+  const fetchChats = async () => {
+    try {
+      const { data } = await axiosInstance.get("/api/chat"); // Fetch chats
+      setChats(data.chats || []); // Update state with chats
+      localStorage.setItem("userChats", JSON.stringify(data.chats)); // Save to local storage
+    } catch (error) {
+      console.error("Error fetching chats:", error);
+    } finally {
+      setLoadingChats(false);
+    }
+  };
+
+  useEffect(() => {
     fetchChats();
   }, [user]);
 
   return (
-    <ChatContext.Provider value={{ chats, setChats, loadingChats,setLoadingChats ,selectedChat, setSelectedChat }}>
+    <ChatContext.Provider
+      value={{
+        chats,
+        setChats,
+        loadingChats,
+        setLoadingChats,
+        selectedChat,
+        notification,
+        setNotification,
+        setSelectedChat,
+        fetchChats,
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );
