@@ -11,11 +11,19 @@ import "./SingleChat.css";
 const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
 
 const MyChats = ({ fetchAgain }) => {
-  const { chats, loadingChats, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+  const {
+    chats,
+    loadingChats,
+    selectedChat,
+    setSelectedChat,
+    notification,
+    setNotification,
+  } = ChatState();
   const { user } = useAuthContext();
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
 
-  const toggleCreateGroupModal = () => setCreateGroupModalOpen(!createGroupModalOpen);
+  const toggleCreateGroupModal = () =>
+    setCreateGroupModalOpen(!createGroupModalOpen);
 
   return (
     <div className="p-4 border w-full h-full border-gray-300 bg-zinc-100 flex flex-col">
@@ -32,7 +40,10 @@ const MyChats = ({ fetchAgain }) => {
       </div>
 
       {/* Chat List */}
-      {chats.length > 0 && !loadingChats ? (
+      {/* Chat List */}
+      {loadingChats ? (
+        <SearchLoader />
+      ) : chats.length > 0 ? (
         <div className="chat-list-container flex-1 overflow-hidden">
           <ScrollableFeed className="space-y-3 w-full hide-scrollbar">
             <ul className="divide-y mt-2 w-full text-zinc-800 divide-gray-200">
@@ -46,7 +57,9 @@ const MyChats = ({ fetchAgain }) => {
                   }`}
                   onClick={() => {
                     setSelectedChat(chat);
-                    setNotification(notification.filter((n) => n.chat._id !== chat._id));
+                    setNotification(
+                      notification.filter((n) => n.chat._id !== chat._id)
+                    );
                   }}
                 >
                   <div className="flex items-center space-x-4">
@@ -57,8 +70,8 @@ const MyChats = ({ fetchAgain }) => {
                           chat?.isGroupChat
                             ? `${basePicUrl}/groupDefault.jpg` // Placeholder for group chats
                             : `${basePicUrl}/${
-                                chat?.users?.find((u) => u._id !== user._id)?.pic ||
-                                "default-avatar.png"
+                                chat?.users?.find((u) => u._id !== user._id)
+                                  ?.pic || "default-avatar.png"
                               }`
                         }
                         alt="Chat Avatar"
@@ -81,7 +94,11 @@ const MyChats = ({ fetchAgain }) => {
           </ScrollableFeed>
         </div>
       ) : (
-        <SearchLoader />
+        <div className="flex justify-center items-center flex-1">
+          <p className="text-gray-500">
+            No chats available. <br /> Start a new chat by clicking on Search User <br /> or create a group chat if you want!
+          </p>
+        </div>
       )}
 
       {/* Profile Modal */}

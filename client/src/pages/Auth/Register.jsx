@@ -20,6 +20,7 @@ const Register = () => {
     }
     setError('') // Clear any previous errors
     await register(name, email, password, pic)
+    navigate(from, { replace: true });
   }
 
   return (
