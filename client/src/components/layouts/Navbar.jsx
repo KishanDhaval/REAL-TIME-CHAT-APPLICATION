@@ -6,8 +6,7 @@ import { useLogout } from "../../hooks/useLogout";
 import Logo from "./Logo";
 import SideDrawer from "./SideDrawer";
 import ProfileModel from "./ProfileModel";
-import { ChatState } from "../../context/ChatProvider";
-import { getSenders } from "../../utils/chatLogics";
+import { basePicUrl } from "../utils/axiosConfig";
 import Notification from "../Notification";
 
 const Navbar = () => {
@@ -16,8 +15,6 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
-  const basePicUrl = "http://localhost:3000/images";
-
   
 
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);

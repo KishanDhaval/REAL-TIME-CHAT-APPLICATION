@@ -20,13 +20,13 @@ import ScrollableFeed from "react-scrollable-feed"; // Importing the ScrollableF
 import { isSameSender } from "../utils/chatLogics";
 import { io } from "socket.io-client";
 import TypingIndicator from "./layouts/TypingIndicator";
+import { basePicUrl } from "../utils/axiosConfig";
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "https://real-time-chat-application-4s2c.onrender.com";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
-
+ 
   const { user } = useAuthContext();
   const {
     selectedChat,

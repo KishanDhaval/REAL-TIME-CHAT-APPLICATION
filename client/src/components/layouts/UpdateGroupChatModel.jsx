@@ -4,6 +4,7 @@ import { ChatState } from "../../context/ChatProvider";
 import { IoClose } from "react-icons/io5";
 import axiosInstance from "../../utils/axiosConfig";
 import toast from "react-hot-toast";
+import { basePicUrl } from "../utils/axiosConfig";
 
 const UpdateGroupChatModel = ({
   fetchAgain,
@@ -11,12 +12,10 @@ const UpdateGroupChatModel = ({
   toggleGroupEditModal,
 }) => {
   const [groupChatName, setGroupChatName] = useState();
-  const [selectedUsers, setSelectedUser] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [renameLoading, setRenameLoading] = useState(false);
-  const basePicUrl = "http://localhost:3000/images";
 
   const { user } = useAuthContext();
   const { selectedChat, setSelectedChat, setLoadingChats, setChats } = ChatState();

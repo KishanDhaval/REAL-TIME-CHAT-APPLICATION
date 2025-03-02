@@ -4,11 +4,11 @@ import { IoClose } from "react-icons/io5";
 import axiosInstance from "../../utils/axiosConfig";
 import toast from "react-hot-toast";
 import { ChatState } from "../../context/ChatProvider";
+import { basePicUrl } from "../utils/axiosConfig";
 
 const CreateGroupModel = ({ toggleCreateGroupModal }) => {
   const { user } = useAuthContext();
-  const basePicUrl = "http://localhost:3000/images";
-
+ 
   const { chats, setChats ,setLoadingChats} = ChatState();
 
   const [groupChatName, setGroupChatName] = useState("");

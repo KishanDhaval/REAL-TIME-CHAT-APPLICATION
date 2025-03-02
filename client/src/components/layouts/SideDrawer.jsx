@@ -4,13 +4,13 @@ import { RxCross2 } from "react-icons/rx";
 import axiosInstance from "../../utils/axiosConfig";
 import SearchLoader from "./SearchLoader"; // Assuming a loader component is defined
 import { ChatState } from "../../context/ChatProvider";
+import { basePicUrl } from "../utils/axiosConfig";
 
 const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [chatCreateLoading, setChatCreateLoading] = useState(false);
-  const basePicUrl = "http://localhost:3000/images";
   const { chats, setChats , setSelectedChat } = ChatState(); // Access context
 
   const handleSearch = async () => {

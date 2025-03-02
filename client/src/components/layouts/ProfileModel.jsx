@@ -2,7 +2,7 @@ import React from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { IoClose } from "react-icons/io5";
 const ProfileModel = ({ toggleProfileModal , user}) => {
-  const basePicUrl = "http://localhost:3000/images";
+  const basePicUrl = "";
 
   return (
     <div

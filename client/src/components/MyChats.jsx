@@ -7,8 +7,7 @@ import { getSenders } from "../utils/chatLogics";
 import SearchLoader from "./layouts/SearchLoader";
 import ScrollableFeed from "react-scrollable-feed";
 import "./SingleChat.css";
-
-const basePicUrl = "http://localhost:3000/images"; // Replace with your actual base URL
+import { basePicUrl } from "../utils/axiosConfig";
 
 const MyChats = ({ fetchAgain }) => {
   const {

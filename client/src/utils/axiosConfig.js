@@ -1,5 +1,5 @@
 import axios from "axios";
-
+export const basePicUrl = "https://real-time-chat-application-4s2c.onrender.com/images"
 // Create a custom axios instance
 const axiosInstance = axios.create({
   baseURL: 'https://real-time-chat-application-4s2c.onrender.com', // Ensure this is set correctly
