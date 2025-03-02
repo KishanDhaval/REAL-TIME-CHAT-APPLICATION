@@ -7,6 +7,8 @@ const authRoutes = require("./routes/authRoute");
 const chatRoutes = require("./routes/chatRoute");
 const massageRoutes = require("./routes/massageRoute");
 const { Socket } = require("socket.io");
+const path = require('path');
+const _dirname = path.resolve();
 
 // Middleware
 app.use(cors());
@@ -15,13 +17,15 @@ app.use(express.static("public"));
 
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("Api is running");
-});
-
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", massageRoutes);
+
+app.use(express.static(path.join(_dirname , "/client/dist")))
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(_dirname, 'client', 'dist', 'index.html'));
+});
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
