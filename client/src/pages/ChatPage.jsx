@@ -5,8 +5,12 @@ import SideDrawer from "../components/layouts/SideDrawer";
 import MyChats from "../components/MyChats";
 import ChatBox from "../components/ChatBox";
 import { ChatState } from "../context/ChatProvider";
+import { basePicUrl } from "../utils/axiosConfig";
+
+
 
 const ChatPage = () => {
+  console.log(basePicUrl);
   const { user } = useAuthContext();
   const { selectedChat } = ChatState();
 

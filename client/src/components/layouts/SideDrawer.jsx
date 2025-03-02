@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import axiosInstance from "../../utils/axiosConfig";
 import SearchLoader from "./SearchLoader"; // Assuming a loader component is defined
 import { ChatState } from "../../context/ChatProvider";
-import { basePicUrl } from "../utils/axiosConfig";
+import { basePicUrl } from "../../utils/axiosConfig";
 
 const SideDrawer = ({ drawerOpen, toggleDrawer, onChatAccess }) => {
   const [searchQuery, setSearchQuery] = useState("");

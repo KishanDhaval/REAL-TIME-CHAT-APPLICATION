@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import axiosInstance from "../../utils/axiosConfig";
 import toast from "react-hot-toast";
 import { ChatState } from "../../context/ChatProvider";
-import { basePicUrl } from "../utils/axiosConfig";
+import { basePicUrl } from "../../utils/axiosConfig";
 
 const CreateGroupModel = ({ toggleCreateGroupModal }) => {
   const { user } = useAuthContext();

@@ -6,7 +6,7 @@ import { useLogout } from "../../hooks/useLogout";
 import Logo from "./Logo";
 import SideDrawer from "./SideDrawer";
 import ProfileModel from "./ProfileModel";
-import { basePicUrl } from "../utils/axiosConfig";
+import { basePicUrl } from "../../utils/axiosConfig";
 import Notification from "../Notification";
 
 const Navbar = () => {

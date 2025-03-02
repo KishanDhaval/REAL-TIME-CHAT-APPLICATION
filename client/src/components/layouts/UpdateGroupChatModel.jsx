@@ -4,7 +4,7 @@ import { ChatState } from "../../context/ChatProvider";
 import { IoClose } from "react-icons/io5";
 import axiosInstance from "../../utils/axiosConfig";
 import toast from "react-hot-toast";
-import { basePicUrl } from "../utils/axiosConfig";
+import { basePicUrl } from "../../utils/axiosConfig";
 
 const UpdateGroupChatModel = ({
   fetchAgain,
